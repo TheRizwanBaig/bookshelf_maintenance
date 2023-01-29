@@ -1,0 +1,29 @@
+.main{
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    align-items: center;
+    margin: 0 auto;
+    padding: 8% 0 30px 0;
+}
+.searchBar{
+   
+    width: 50%;
+}
+.select{
+    width: 30%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.label{
+    color: white;
+}
+.sortButton{
+    min-width: 80px;
+    max-width: 80px;
+    color: white;
+    border: 1px solid rgb(219, 214, 214);
+    padding: 8px 10px;
+    border-radius: 10px;
+}
