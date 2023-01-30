@@ -2,10 +2,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import axios from 'axios'
 import Link from 'next/link'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { useRouter } from 'next/router'
+
 const SignUp = () => {
+  const router = useRouter()
 
   const [signUpData, setSignUpData] = useState({
-    name:"",
+    name: '',
     email: '',
     password: ''
   })
@@ -17,7 +23,7 @@ const SignUp = () => {
     e.preventDefault()
     console.log(setSignUpData)
     const response = axios.post(
-      process.env.NEXT_PUBLIC_BACKEND_URL +'/api/user/signUp',
+      process.env.NEXT_PUBLIC_BACKEND_URL + '/api/user/signUp',
       signUpData
     )
     return response
@@ -25,16 +31,40 @@ const SignUp = () => {
   const { mutate, isLoading, isError } = useMutation(postData, {
     onSuccess: successData => {
       console.log(successData)
+      if (successData.data.error===false){
+        alert(successData.data.message)
+        router.push('/login')
+        
+      }else{
+      alert(successData.data.message)}
     }
   })
-  if (isLoading) {
-    return <h3>Loading</h3>
-  }
+
   if (isError) {
-    return <h3>Something wrong</h3>
+    return (
+      <div className='bg-gray-50 dark:bg-gray-900'>
+        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
+          <div className='flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white'>
+            Something wrong!
+          </div>
+        </div>
+      </div>
+    )
   }
   return (
     <section className='bg-gray-50 dark:bg-gray-900'>
+      <ToastContainer 
+        position='top-center'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='colored'
+      ></ToastContainer>
       <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
         <a
           href='#'
@@ -104,14 +134,15 @@ const SignUp = () => {
                   required=''
                 />
               </div>
-           
-          
-              <button
+
+              <LoadingButton
+                variant='contained'
+                loading={isLoading}
                 onClick={mutate}
                 className='w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
               >
                 Create an account
-              </button>
+              </LoadingButton>
               <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
                 Already have an account?{' '}
                 <Link

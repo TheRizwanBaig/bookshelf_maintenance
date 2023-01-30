@@ -2,9 +2,14 @@ import { useForm } from 'react-hook-form'
 import Link from 'next/link'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
+import LoadingButton from '@mui/lab/LoadingButton'
 import axios from 'axios'
+import { useRouter } from 'next/router'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Login = () => {
+const Login = ({ refresh, setRefresh, isLogin }) => {
+  const router = useRouter()
   const [loginData, setLoginData] = useState({
     email: '',
     password: ''
@@ -18,7 +23,7 @@ const Login = () => {
     e.preventDefault()
     console.log(loginData)
     const response = axios.post(
-      process.env.NEXT_PUBLIC_BACKEND_URL +'/api/user/login',
+      process.env.NEXT_PUBLIC_BACKEND_URL + '/api/user/login',
       loginData
     )
     return response
@@ -26,19 +31,41 @@ const Login = () => {
   const { mutate, isLoading, isError } = useMutation(postData, {
     onSuccess: successData => {
       console.log(successData)
-      setUserData(successData.data.userData)
-      localStorage.setItem('token', successData.data.token)
-      localStorage.setItem('user', JSON.stringify(successData.data.userData))
+      if (successData.data.error===false) {
+        // toast.success(successData.data.message)
+        router.push('/')
+        setUserData(successData.data.userData)
+        localStorage.setItem('token', successData.data.token)
+        localStorage.setItem('user', JSON.stringify(successData.data.userData))
+        setRefresh(!refresh)
+      } else {
+        alert(successData.data.message)
+      }
     }
   })
-  if (isLoading) {
-    return <h3>Loading</h3>
-  }
   if (isError) {
-    return <h3>Something wrong</h3>
+    return (
+      <div className='bg-gray-50 dark:bg-gray-900'>
+        <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
+          <div className='flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white'>
+            Something wrong!
+          </div>
+        </div>
+      </div>
+    )
   }
   return (
     <section className='bg-gray-50 dark:bg-gray-900'>
+      <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
       <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
         <div
           href='#'
@@ -71,7 +98,7 @@ const Login = () => {
                   onChange={handleChange}
                   className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   placeholder='name@company.com'
-                  required=''
+                  required
                 />
               </div>
               <div>
@@ -88,7 +115,7 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder='••••••••'
                   className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                  required=''
+                  required
                 />
               </div>
               <div className='flex items-center justify-between'>
@@ -99,12 +126,14 @@ const Login = () => {
                   Forgot password?
                 </a>
               </div>
-              <button
+              <LoadingButton
+                variant='contained'
+                loading={isLoading}
                 onClick={mutate}
                 className='w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
               >
                 Sign in
-              </button>
+              </LoadingButton>
               <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
                 Don’t have an account yet?{' '}
                 <Link

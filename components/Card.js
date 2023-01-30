@@ -1,120 +1,120 @@
 import { useState } from 'react'
 import styles from '../styles/Card.module.css'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import IconButton from '@mui/material/IconButton'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import axiosClient from '@/axiosInstance'
+import Skeleton from '@mui/material/Skeleton'
 
-const Card = ({ID,title,author,picURL}) => {
-  const [dropDown, setDropDown] = useState(false)
-  const [status, setStatus] = useState("")
-
-const postData = e => {
-  e.preventDefault()
-  console.log(loginData)
-  const response = axios.post(
-    'http://localhost:7000/api/book/updateStatus',
-    {status:status,ID:ID}
-  )
-  return response
-}
-const { mutate, isLoading, isError } = useMutation(postData, {
-  onSuccess: successData => {
-    console.log(successData)
-    setUserData(successData.data.userData)
-    localStorage.setItem('token', successData.data.token)
-    localStorage.setItem('user', JSON.stringify(successData.data.userData))
+const Card = ({ ID, title, author, picURL, refetch }) => {
+  const [status, setStatus] = useState('')
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget)
   }
-})
-if (isLoading) {
-  return <h3>Loading</h3>
-}
-if (isError) {
-  return <h3>Something wrong</h3>
-}
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+  const postData = newStatus => {
+    console.log(newStatus)
+    const response = axiosClient.post(
+      process.env.NEXT_PUBLIC_BACKEND_URL + '/api/book/updateStatus',
+      {
+        status: newStatus,
+        ID: ID
+      }
+    )
+    return response
+  }
+  const { mutate, isLoading, isError } = useMutation(postData, {
+    onSuccess: successData => {
+      console.log(successData),
+      refetch()
+    }
+  })
+
+  if (isLoading) {
+    return (
+      <div className={styles.skeletons}>
+        <Skeleton
+          variant='rounded'
+          width='100%'
+          height={220}
+          sx={{ marginBottom: '5px', borderRadius: '0 12px 12px 0' }}
+        />
+        <Skeleton
+          variant='rounded'
+          width='100%'
+          height={20}
+          sx={{ marginBottom: '5px' }}
+        />
+        <Skeleton
+          variant='rounded'
+          width='100%'
+          height={20}
+          sx={{ marginBottom: '5px' }}
+        />
+      </div>
+    )
+  }
+  if (isError) {
+    return <h3>Something wrong</h3>
+  }
+  const handleSubmit = newStatus => {
+    mutate(newStatus)
+    handleClose()
+  }
   return (
     <div className={styles.card}>
-    <div onClick={()=>setDropDown(!dropDown)}>V</div>
-    {dropDown?
-    <div>
-
-    </div>:null}
-  <div className={styles.img}>
-    <img src={picURL} alt={title} />
-  </div>
-  <div>{title}</div>
-  <div>{author}</div>
+      <div className={styles.card__img}>
+        <div className={styles.card__menu}>
+          <IconButton
+            sx={{ color: 'white' }}
+            onClick={handleClick}
+            aria-label='delete'
+          >
+            <MoreVertIcon />
+          </IconButton>
+        </div>
+        <Menu
+          id='basic-menu'
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button'
+          }}
+        >
+          <MenuItem
+            onClick={() => {
+              handleSubmit('reading')
+            }}
+          >
+            Reading
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleSubmit('complete')
+            }}
+          >
+            Complete
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleSubmit('plan_to_read')
+            }}
+          >
+            Plan to read
+          </MenuItem>
+        </Menu>
+        <img src={picURL} width='100%' height='100%' />
+      </div>
+      <div className={styles.card__name}> {title}</div>
+      <div className={styles.card__author}> {author}</div>
     </div>
-    // <div className='w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
-    //   <div className='flex justify-end px-4 pt-4'>
-    //     <button
-    //       onClick={() => setDropDown(!dropDown)}
-    //       className='inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5'
-    //       type='button'
-    //     >
-    //       <span className='sr-only'>Open dropdown</span>
-    //       <svg
-    //         className='w-6 h-6'
-    //         aria-hidden='true'
-    //         fill='currentColor'
-    //         viewBox='0 0 20 20'
-    //         xmlns='http://www.w3.org/2000/svg'
-    //       >
-    //         <path d='M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z'></path>
-    //       </svg>
-    //     </button>
-    //     <div className='z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700'>
-    //       <ul className='py-2' aria-labelledby='dropdownButton'>
-    //         <li>
-    //           <a
-    //             href='#'
-    //             className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white'
-    //           >
-    //             Edit
-    //           </a>
-    //         </li>
-    //         <li>
-    //           <a
-    //             href='#'
-    //             className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white'
-    //           >
-    //             Export Data
-    //           </a>
-    //         </li>
-    //         <li>
-    //           <a
-    //             href='#'
-    //             className='block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white'
-    //           >
-    //             Delete
-    //           </a>
-    //         </li>
-    //       </ul>
-    //     </div>
-    //   </div>
-    //   <div className='flex flex-col items-center pb-10'>
-    //     <img
-    //       src={picURL}
-    //       alt='Bonnie image'
-    //     />
-    //     <h5 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>
-    //       {title}
-    //     </h5>
-    //     <span className='text-sm text-gray-500 dark:text-gray-400'>
-    //       {author}
-    //     </span>
-    //     <div className='flex mt-4 space-x-3 md:mt-6'>
-    //       <div
-    //         className='inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-    //       >
-    //         change
-    //       </div>
-    //       <a
-    //         href='#'
-    //         className='inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700'
-    //       >
-    //         Message
-    //       </a>
-    //     </div>
-    //   </div>
-    // </div>
   )
 }
 
