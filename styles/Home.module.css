@@ -4,6 +4,7 @@ min-height: 100vh;
 .booksContainer{
   width: 85%;
   margin: 0 auto;
+  min-height: 72vh;
 }
 .books{
   padding-bottom: 50px;

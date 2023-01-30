@@ -31,8 +31,8 @@ const Card = ({ ID, title, author, picURL, refetch }) => {
   }
   const { mutate, isLoading, isError } = useMutation(postData, {
     onSuccess: successData => {
-      console.log(successData),
-      refetch()
+      console.log(successData)
+      // refetch()
     }
   })
 
