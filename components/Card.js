@@ -32,7 +32,9 @@ const Card = ({ ID, title, author, picURL, refetch }) => {
   const { mutate, isLoading, isError } = useMutation(postData, {
     onSuccess: successData => {
       console.log(successData)
-      // refetch()
+      if (successData.data.error===false){
+        refetch()
+      }
     }
   })
 
@@ -72,7 +74,8 @@ const Card = ({ ID, title, author, picURL, refetch }) => {
       <div className={styles.card__img}>
         <div className={styles.card__menu}>
           <IconButton
-            sx={{ color: 'white' }}
+            sx={{ color: 'black' }}
+            size='small'
             onClick={handleClick}
             aria-label='delete'
           >
