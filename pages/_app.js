@@ -24,7 +24,6 @@ export default function App ({ Component, pageProps }) {
     const token = !value ? false : value
     const userValue = localStorage.getItem('user')
     const user = !userValue ? false : userValue
-    // const user = !userValue ? false : JSON.parse(userValue)
     setIsLogin(token)
     setUser(user)
     setLoading(false)

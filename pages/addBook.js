@@ -4,8 +4,10 @@ import axiosClient from '@/axiosInstance'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useRouter } from 'next/router'
 
 const AddBook = () => {
+  const router = useRouter()
   const [bookData, setBookData] = useState({
     title: '',
     picURL: '',
@@ -31,9 +33,10 @@ const AddBook = () => {
     onSuccess: successData => {
       if (successData.data.error === false) {
         console.log(successData)
-        alert(successData.data.message)
+        // alert(successData.data.message)
+        router.push('/')
       } else {
-        alert(successData.data.message)
+        // alert(successData.data.message)
       }
     }
   })

@@ -5,8 +5,8 @@ import { useState } from 'react'
 import LoadingButton from '@mui/lab/LoadingButton'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Login = ({ refresh, setRefresh, isLogin }) => {
   const router = useRouter()
@@ -21,7 +21,6 @@ const Login = ({ refresh, setRefresh, isLogin }) => {
   const [userData, setUserData] = useState()
   const postData = e => {
     e.preventDefault()
-    console.log(loginData)
     const response = axios.post(
       process.env.NEXT_PUBLIC_BACKEND_URL + '/api/user/login',
       loginData
@@ -30,13 +29,14 @@ const Login = ({ refresh, setRefresh, isLogin }) => {
   }
   const { mutate, isLoading, isError } = useMutation(postData, {
     onSuccess: successData => {
-      console.log(successData)
-      if (successData.data.error===false) {
+      // console.log(successData)
+      if (successData.data.error === false) {
         // toast.success(successData.data.message)
+        alert(successData.data.message)
         router.push('/')
         setUserData(successData.data.userData)
         localStorage.setItem('token', successData.data.token)
-        localStorage.setItem('user', JSON.stringify(successData.data.userData))
+        localStorage.setItem('user', successData.data.userData.name)
         setRefresh(!refresh)
       } else {
         alert(successData.data.message)
@@ -57,15 +57,15 @@ const Login = ({ refresh, setRefresh, isLogin }) => {
   return (
     <section className='bg-gray-50 dark:bg-gray-900'>
       <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
+        position='top-center'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
         <div
           href='#'

@@ -12,9 +12,20 @@
 
 .card__menu {
   position: absolute;
-  background-color: rgba(128, 128, 128, 0.756);
-  border-radius: 90px;
-  margin: 7px;
+  top: 0;
+  width: 100%;
+  min-height: 12%;
+  max-height: 12%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  border-radius: 15px 15px 0 0;
+  background: rgba(65, 66, 76, 0.23);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6.3px);
+  -webkit-backdrop-filter: blur(6.3px);
 }
 
 .card__img {

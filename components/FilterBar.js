@@ -1,11 +1,5 @@
 import styles from '../styles/FilterBar.module.css'
-const FilterBar = ({
-  search,
-  setSearch,
-  sort,
-  setSort,
-  refetch
-}) => {
+const FilterBar = ({ search, setSearch, sort, setSort, refetch }) => {
   return (
     <div className={styles.main}>
       <div className={styles.searchBar}>
@@ -42,7 +36,7 @@ const FilterBar = ({
               placeholder='Search Mockups, Logos...'
               required
             />
-            {/* <button
+            <button
               onClick={e => {
                 e.preventDefault()
                 refetch()
@@ -50,7 +44,7 @@ const FilterBar = ({
               className='text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             >
               Search
-            </button> */}
+            </button>
           </div>
         </form>
       </div>
@@ -67,7 +61,7 @@ const FilterBar = ({
           <option value='title'>Title</option>
           <option value='authorName'>Author Name</option>
           <option value='genre'>Genre</option>
-          <option value='publicationDate'>Publication Date</option>
+          <option value='publicationYear'>Publication Year</option>
         </select>
         <button
           onClick={e => {

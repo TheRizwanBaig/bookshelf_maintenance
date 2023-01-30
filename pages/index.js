@@ -37,7 +37,7 @@ export default function Home () {
   if (isError) {
     return <h3>Something wrong</h3>
   }
-
+  if (!refetch) return
   return (
     <div style={{ minHight: '100vh' }} className='bg-gray-50 dark:bg-gray-900'>
       <FilterBar
@@ -52,27 +52,21 @@ export default function Home () {
           <div className={styles.booksHeading}>Reading</div>
           {data?.reading ? (
             <div className={styles.cardContainer}>
-              {data?.reading
-                ?.filter(obj => {
-                  if (search === '') {
-                    return obj
-                  } else if (
-                    obj.title.toLowerCase().includes(search?.toLowerCase())
-                  ) {
-                    return obj
-                  }
-                })
-                .map(book => {
-                  return (
-                    <Card
-                      ID={book._id}
-                      title={book.title}
-                      author={book.authorName}
-                      picURL={book.picURL}
-                      refetch={refetch}
-                    />
-                  )
-                })}
+              {data?.reading.map(book => {
+                return (
+                  <Card
+                    ID={book._id}
+                    title={book.title}
+                    author={book.authorName}
+                    picURL={book.picURL}
+                    refetch={refetch}
+                    publicationHouse={book.publicationHouse}
+                    genre={book.genre}
+                    publicationYear={book.publicationYear}
+                    status={book.status}
+                  />
+                )
+              })}
             </div>
           ) : (
             <div className={styles.empty}>Empty Shelf</div>
@@ -82,26 +76,21 @@ export default function Home () {
           <div className={styles.booksHeading}>Complete</div>
           {data?.complete ? (
             <div className={styles.cardContainer}>
-              {data?.complete
-                ?.filter(obj => {
-                  if (search === '') {
-                    return obj
-                  } else if (
-                    obj.title.toLowerCase().includes(search?.toLowerCase())
-                  ) {
-                    return obj
-                  }
-                })
-                .map(book => {
-                  return (
-                    <Card
-                      ID={book._id}
-                      title={book.title}
-                      author={book.authorName}
-                      picURL={book.picURL}
-                    />
-                  )
-                })}
+              {data?.complete.map(book => {
+                return (
+                  <Card
+                    ID={book._id}
+                    title={book.title}
+                    author={book.authorName}
+                    picURL={book.picURL}
+                    refetch={refetch}
+                    publicationHouse={book.publicationHouse}
+                    genre={book.genre}
+                    publicationYear={book.publicationYear}
+                    status={book.status}
+                  />
+                )
+              })}
             </div>
           ) : (
             <div className={styles.empty}>Empty Shelf</div>
@@ -111,26 +100,21 @@ export default function Home () {
           <div className={styles.booksHeading}>Plan to read</div>
           {data?.plan_to_read ? (
             <div className={styles.cardContainer}>
-              {data?.plan_to_read
-                ?.filter(obj => {
-                  if (search === '') {
-                    return obj
-                  } else if (
-                    obj.title.toLowerCase().includes(search?.toLowerCase())
-                  ) {
-                    return obj
-                  }
-                })
-                .map(book => {
-                  return (
-                    <Card
-                      ID={book._id}
-                      title={book.title}
-                      author={book.authorName}
-                      picURL={book.picURL}
-                    />
-                  )
-                })}
+              {data?.plan_to_read.map(book => {
+                return (
+                  <Card
+                    ID={book._id}
+                    title={book.title}
+                    author={book.authorName}
+                    picURL={book.picURL}
+                    refetch={refetch}
+                    publicationHouse={book.publicationHouse}
+                    genre={book.genre}
+                    publicationYear={book.publicationYear}
+                    status={book.status}
+                  />
+                )
+              })}
             </div>
           ) : (
             <div className={styles.empty}>Empty Shelf</div>

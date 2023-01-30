@@ -21,7 +21,6 @@ const SignUp = () => {
   }
   const postData = e => {
     e.preventDefault()
-    console.log(setSignUpData)
     const response = axios.post(
       process.env.NEXT_PUBLIC_BACKEND_URL + '/api/user/signUp',
       signUpData
@@ -30,13 +29,13 @@ const SignUp = () => {
   }
   const { mutate, isLoading, isError } = useMutation(postData, {
     onSuccess: successData => {
-      console.log(successData)
-      if (successData.data.error===false){
+      // console.log(successData)
+      if (successData.data.error === false) {
         alert(successData.data.message)
         router.push('/login')
-        
-      }else{
-      alert(successData.data.message)}
+      } else {
+        alert(successData.data.message)
+      }
     }
   })
 
@@ -53,7 +52,7 @@ const SignUp = () => {
   }
   return (
     <section className='bg-gray-50 dark:bg-gray-900'>
-      <ToastContainer 
+      <ToastContainer
         position='top-center'
         autoClose={5000}
         hideProgressBar={false}

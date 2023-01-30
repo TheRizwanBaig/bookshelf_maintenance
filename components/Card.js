@@ -7,19 +7,38 @@ import IconButton from '@mui/material/IconButton'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import axiosClient from '@/axiosInstance'
 import Skeleton from '@mui/material/Skeleton'
+import CardModal from './CardModal'
 
-const Card = ({ ID, title, author, picURL, refetch }) => {
-  const [status, setStatus] = useState('')
+const Card = ({
+  ID,
+  title,
+  author,
+  picURL,
+  refetch,
+  publicationHouse,
+  genre,
+  publicationYear,
+  status
+}) => {
   const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl2, setAnchorEl2] = useState(null)
+  const [openModal, setOpenModal] = useState(false)
+
   const open = Boolean(anchorEl)
+  const open2 = Boolean(anchorEl2)
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
     setAnchorEl(null)
   }
+  const handleClick2 = event => {
+    setAnchorEl2(event.currentTarget)
+  }
+  const handleClose2 = () => {
+    setAnchorEl2(null)
+  }
   const postData = newStatus => {
-    console.log(newStatus)
     const response = axiosClient.post(
       process.env.NEXT_PUBLIC_BACKEND_URL + '/api/book/updateStatus',
       {
@@ -32,7 +51,7 @@ const Card = ({ ID, title, author, picURL, refetch }) => {
   const { mutate, isLoading, isError } = useMutation(postData, {
     onSuccess: successData => {
       console.log(successData)
-      if (successData.data.error===false){
+      if (successData.data.error === false) {
         refetch()
       }
     }
@@ -69,14 +88,39 @@ const Card = ({ ID, title, author, picURL, refetch }) => {
     mutate(newStatus)
     handleClose()
   }
+
+  const handleDelete = () => {
+    console.log(ID)
+    axiosClient
+      .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/book/deleteBook', {
+        _id: ID
+      })
+      .then(res => {
+        console.log(res)
+        handleClose2()
+        refetch()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
   return (
     <div className={styles.card}>
       <div className={styles.card__img}>
         <div className={styles.card__menu}>
           <IconButton
-            sx={{ color: 'black' }}
+            sx={{ color: 'white' }}
             size='small'
             onClick={handleClick}
+            aria-label='delete'
+          >
+            Update Status
+          </IconButton>
+          <IconButton
+            sx={{ color: 'white' }}
+            size='small'
+            onClick={handleClick2}
             aria-label='delete'
           >
             <MoreVertIcon />
@@ -113,10 +157,41 @@ const Card = ({ ID, title, author, picURL, refetch }) => {
             Plan to read
           </MenuItem>
         </Menu>
+        <Menu
+          id='basic-menu'
+          anchorEl={anchorEl2}
+          open={open2}
+          onClose={handleClose2}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button'
+          }}
+        >
+          <MenuItem
+            onClick={() => {
+              setOpenModal(true)
+            }}
+          >
+            Edit
+          </MenuItem>
+          <MenuItem onClick={handleDelete}>Delete</MenuItem>
+        </Menu>
         <img src={picURL} width='100%' height='100%' />
       </div>
       <div className={styles.card__name}> {title}</div>
       <div className={styles.card__author}> {author}</div>
+      <CardModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        _id={ID}
+        title={title}
+        picURL={picURL}
+        authorName={author}
+        publicationHouse={publicationHouse}
+        genre={genre}
+        publicationYear={publicationYear}
+        status={status}
+        refetch={refetch}
+      />
     </div>
   )
 }

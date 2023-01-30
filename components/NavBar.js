@@ -15,10 +15,8 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axiosClient from '@/axiosInstance'
 
-
 const NavBar = ({ refresh, setRefresh, isLogin, user }) => {
   const [anchorElUser, setAnchorElUser] = useState(null)
-console.log(user);
   function handleLogout () {
     localStorage.clear()
     setRefresh(!refresh)
@@ -77,7 +75,7 @@ console.log(user);
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
                     sx={{ bgcolor: '#41424C' }}
-                    alt={user?.name}
+                    alt={user}
                     src='/static/images/avatar/2.jpg'
                   />
                 </IconButton>
@@ -89,7 +87,7 @@ console.log(user);
                   sx={{ color: 'white' }}
                   endIcon={<ArrowDropDownIcon />}
                 >
-                  {user?.name}
+                  {user}
                 </Button>
               </Tooltip>
 
